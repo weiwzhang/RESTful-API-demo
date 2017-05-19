@@ -42,15 +42,15 @@ server.del('/times/:Id', del);		   // /time/delete/<id>
 function set(req, res, next) {
  	var targetId = mongoose.Types.ObjectId(req.params.Id);
  	var targetUtc = req.params.utc;
- 	var query = {Id:targetId};
 
-	Time.findOneAndUpdate({_id: req.params.Id}, 
-		{$set: {_id: req.params.Id, utc: req.params.utc}, $set: {utc: req.params.utc}}, 
+	Time.findOneAndUpdate({_id: targetId}, 
+		{$set: {_id: targetId, utc: targetUtc}, $set: {utc: targetUtc}}, 
 		{upsert:true, new: true}, function(err, doc){
+			if (err) return handleError(err);
 			doc.save(function(err, doc) {
 				if (err) return handleError(err);
 			})
-			res.send(JSON.stringify(doc));
+			res.send(doc);
 	});
  	
     return next();
@@ -58,22 +58,24 @@ function set(req, res, next) {
 
 function get(req, res, next) {
 	var targetId = mongoose.Types.ObjectId(req.params.Id);
- 	var targetTime = Time.find({_id: req.params.Id}, function (err, doc) {
- 		if (err) res.send(err);
+	var targetZone = req.params.zone;
+ 	var targetTime = Time.find({_id: targetId}, function (err, doc) {
+ 		if (err) return handleError(err);
  	});
 
  	// convert target utc by timezone from HTTP request
- 	var format = 'YYYY-MM-DD HH:mm:ss Z';
- 	var newtime = moment(targetTime, format);  
- 	newtime.tz(req.params.zone);      // use moment.js to convert timezone
- 	res.send(newtime.toJSON());     // JSON resonse
+ 	var newtime = moment.tz(targetTime, targetZone);  
+ 	newtime.format();      
+ 	res.send(newtime.toJSON());   
  	return next();
 }
 
 function del(req, res, next) {
- 	Time.findByIdAndRemove(mongoose.Types.ObjectId(req.params.Id), function (err, doc) {
+	var targetId = mongoose.Types.ObjectId(req.params.Id);
+
+ 	Time.findByIdAndRemove(targetId, function (err, doc) {
   		if (err) return handleError(err);
-  		res.send(JSON.stringify(doc));
+  		res.send(doc);
 	});
  	return next();
 };
