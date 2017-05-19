@@ -1,5 +1,5 @@
 /*RESTful API demo
-support following CRUD operations: SET (create & update), GET, DELETE
+support following CRUD operations: POST (create & update), GET, DELETE
  --- @author Weiwei Zhang*/
 
 /**
