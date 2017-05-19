@@ -1,0 +1,22 @@
+/*RESTful API demo
+ --- @author Weiwei Zhang*/
+
+
+{
+  "name": "restful_api",
+  "version": "1.0.0",
+  "description": "logdna coding challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "wz",
+  "license": "ISC",
+  "dependencies": {
+    "moment-timezone": "^0.5.13",
+    "mongoose": "^4.9.9",
+    "restify": "^4.3.0",
+    "restify-errors": "^4.3.0",
+  }
+}
